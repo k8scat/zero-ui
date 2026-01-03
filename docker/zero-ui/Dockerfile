@@ -1,5 +1,5 @@
 # Stage 1: Build frontend
-FROM --platform=$BUILDPLATFORM node:lts-alpine AS frontend-build
+FROM --platform=$BUILDPLATFORM node:18.18-alpine3.18 AS frontend-build
 
 ENV GENERATE_SOURCEMAP=false
 
@@ -22,7 +22,7 @@ COPY ./frontend /app/frontend/
 RUN yarn build
 
 # Stage 2: Build backend
-FROM node:lts-alpine AS backend-build
+FROM node:18.18-alpine3.18 AS backend-build
 
 # Enable corepack and create necessary directories in one layer
 RUN corepack enable && mkdir -p /app/backend
@@ -44,7 +44,7 @@ RUN yarn workspaces focus --production backend && yarn cache clean
 COPY ./backend /app/backend
 
 # Final Stage: Production
-FROM node:lts-alpine
+FROM node:18.18-alpine3.18
 
 # Set the working directory to /app/backend
 WORKDIR /app/backend
