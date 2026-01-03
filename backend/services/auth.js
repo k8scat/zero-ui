@@ -20,16 +20,24 @@ export async function authorize(username, password, callback) {
 export async function isAuthorized(req, res, next) {
   if (process.env.ZU_DISABLE_AUTH === "true") {
     next();
-  } else {
-    if (req.token) {
-      const user = await db.get("users").find({ token: req.token }).value();
-      if (user) {
-        next();
-      } else {
-        res.status(403).send({ error: "Invalid token" });
-      }
-    } else {
-      res.status(401).send({ error: "Specify token" });
-    }
+    return;
   }
+
+  if (!req.token) {
+    res.status(401).send({ error: "Specify token" });
+    return;
+  }
+
+  if (process.env.ZU_AUTH_TOKEN === req.token) {
+    next();
+    return;
+  }
+
+  const user = await db.get("users").find({ token: req.token }).value();
+  if (user) {
+    next();
+    return;
+  }
+
+  res.status(403).send({ error: "Invalid token" });
 }
