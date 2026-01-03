@@ -10,7 +10,6 @@ WORKDIR /app
 
 # Copy package-related files and install dependencies
 COPY tsconfig.json package.json yarn.lock* .yarnrc.yml ./
-COPY .yarn/ ./.yarn
 
 # Set working directory to frontend and copy package files
 WORKDIR /app/frontend
@@ -31,7 +30,6 @@ WORKDIR /app
 
 # Copy package-related files and install dependencies
 COPY package.json yarn.lock* .yarnrc.yml ./
-COPY .yarn/ ./.yarn
 
 # Set working directory to backend and copy package files
 WORKDIR /app/backend
